@@ -1,0 +1,30 @@
+datasource db {
+    url      = env("DATABASE_URL")
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Users {
+    id       Int    @default(autoincrement()) @map("id") @db.Integer
+    username String @map("name") @db.VarChar(30)
+    password String @map("password") @db.VarChar(30)
+
+    posts Posts[]
+
+    @@id([id])
+    @@map("users")
+}
+
+model Posts {
+    id    Int    @default(autoincrement()) @map("id") @db.Integer
+    title String @map("title") @db.VarChar(149)
+
+    Users  Users? @relation(fields: [userId], references: [id])
+    userId Int?   @db.Integer
+
+    @@id([id])
+    @@map("posts")
+}
